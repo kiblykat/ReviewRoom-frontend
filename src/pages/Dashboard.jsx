@@ -51,13 +51,13 @@ export default function Dashboard() {
       const res = await axios.delete(
         `http://localhost:9090/customers/${customerId}`
       );
+      window.location.reload();
     } catch (error) {
       console.log("error encountered: ", error);
     }
   };
 
   useEffect(() => customersLoader, []);
-  useEffect(() => customersLoader, [deleteCustomer]);
 
   return (
     <SimpleGrid spacing={10} minChildWidth="250px">

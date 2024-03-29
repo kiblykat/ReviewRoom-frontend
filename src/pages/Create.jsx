@@ -4,18 +4,19 @@ import { Button, Heading } from "@chakra-ui/react";
 
 export default function Create() {
   const [formData, setFormData] = useState({});
-  const [customerId, setCustomerId] = useState(null);
-  const [productId, setProductId] = useState(null);
+  const [customerId, setCustomerId] = useState(0);
+  const [productId, setProductId] = useState(0);
 
   const handleInputChange = (event) => {
+    console.log(typeof event.target.value);
     if (event.target.name != "customerId" || event.target.name != "productId") {
       setFormData({ ...formData, [event.target.name]: event.target.value });
     }
 
-    if (event.target.name === "customerId") {
-      setCustomerId(event.target.name);
-    } else if (event.target.name === "productId") {
-      setProductId(event.target.value);
+    if (event.target.name == "customerId") {
+      setCustomerId(Number(event.target.value));
+    } else if (event.target.name == "productId") {
+      setProductId(Number(event.target.value));
     }
   };
 
@@ -46,16 +47,16 @@ export default function Create() {
       <label htmlFor="customerId">customerId:</label>
       <input
         style={{ margin: "5px", padding: "3px" }}
-        type="text"
+        type="number"
         id="customerId"
         name="customerId"
         onChange={handleInputChange}
       />
-      <br margin="3" />
+      <br />
       <label htmlFor="productId">productId:</label>
       <input
         style={{ margin: "5px", padding: "3px" }}
-        type="text"
+        type="number"
         id="productId"
         name="productId"
         onChange={handleInputChange}
