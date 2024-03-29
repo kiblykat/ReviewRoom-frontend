@@ -37,16 +37,27 @@ export default function Dashboard() {
   const reviewsLoader = async (customerId) => {
     try {
       const res = await axios.get(
-        `http://localhost:9090/reviews/${customerId}`
+        `http://localhost:9090/customers/${customerId}`
       );
       setReviews(res.data);
-      console.log(res.data);
+      console.log(res.data.reviews);
+    } catch (error) {
+      console.log("error encountered: ", error);
+    }
+  };
+
+  const deleteCustomer = async (customerId) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:9090/customers/${customerId}`
+      );
     } catch (error) {
       console.log("error encountered: ", error);
     }
   };
 
   useEffect(() => customersLoader, []);
+  useEffect(() => customersLoader, [deleteCustomer]);
 
   return (
     <SimpleGrid spacing={10} minChildWidth="250px">
@@ -60,7 +71,7 @@ export default function Dashboard() {
           >
             <CardHeader>
               <Flex gap="5px">
-                <Avatar src={customer.img} />
+                <Avatar src="/img/ugandanKnuckles.png" />
                 <Box>
                   <Heading as="h3" size="small">
                     {customer.firstName} {customer.lastName}
@@ -69,6 +80,7 @@ export default function Dashboard() {
                   <Text>
                     Reviewed Products: {customer.reviewedProducts.length}
                   </Text>
+                  <Text>Email: {customer.email}</Text>
                 </Box>
               </Flex>
             </CardHeader>
@@ -76,8 +88,12 @@ export default function Dashboard() {
             <Divider borderColor="gray.200" />
             <CardFooter>
               <HStack>
-                <Button variant="ghost" leftIcon={<EditIcon />}>
-                  Add Review
+                <Button
+                  variant="ghost"
+                  leftIcon={<EditIcon />}
+                  onClick={() => deleteCustomer(customer.id)}
+                >
+                  Delete
                 </Button>
                 <Button
                   variant="ghost"

@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Button, Heading } from "@chakra-ui/react";
 
 export default function Create() {
   const [formData, setFormData] = useState({});
+  const [customerId, setCustomerId] = useState(null);
+  const [productId, setProductId] = useState(null);
 
   const handleInputChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    if (event.target.name != "customerId" || event.target.name != "productId") {
+      setFormData({ ...formData, [event.target.name]: event.target.value });
+    }
+
+    if (event.target.name === "customerId") {
+      setCustomerId(event.target.name);
+    } else if (event.target.name === "productId") {
+      setProductId(event.target.value);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -13,7 +24,7 @@ export default function Create() {
 
     try {
       const response = await axios.post(
-        "http://localhost:9090/customers/1/products/2/reviews",
+        `http://localhost:9090/customers/${customerId}/products/${productId}/reviews`,
         formData,
         {
           headers: { "Content-Type": "application/json" },
@@ -31,8 +42,28 @@ export default function Create() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Heading size="md">Add review to existing customer</Heading>
+      <label htmlFor="customerId">customerId:</label>
+      <input
+        style={{ margin: "5px", padding: "3px" }}
+        type="text"
+        id="customerId"
+        name="customerId"
+        onChange={handleInputChange}
+      />
+      <br margin="3" />
+      <label htmlFor="productId">productId:</label>
+      <input
+        style={{ margin: "5px", padding: "3px" }}
+        type="text"
+        id="productId"
+        name="productId"
+        onChange={handleInputChange}
+      />
+      <br />
       <label htmlFor="category">Category:</label>
       <input
+        style={{ margin: "5px", padding: "3px" }}
         type="text"
         id="category"
         name="category"
@@ -41,6 +72,7 @@ export default function Create() {
       <br />
       <label htmlFor="reviewContent">reviewContent:</label>
       <input
+        style={{ margin: "5px", padding: "3px" }}
         type="text"
         id="reviewContent"
         name="reviewContent"
@@ -49,13 +81,16 @@ export default function Create() {
       <br />
       <label htmlFor="rating">Rating:</label>
       <input
+        style={{ margin: "5px", padding: "3px" }}
         type="number"
         id="rating"
         name="rating"
         onChange={handleInputChange}
       />
       <br />
-      <button type="submit">Submit Review</button>
+      <Button type="submit" colorScheme="purple">
+        Add review
+      </Button>
     </form>
   );
 }

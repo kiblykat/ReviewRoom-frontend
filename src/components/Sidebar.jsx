@@ -15,13 +15,7 @@ export default function Sidebar() {
       <ListItem>
         <NavLink to="/create">
           <ListIcon as={EditIcon} color={"white"} />
-          New Task
-        </NavLink>
-      </ListItem>
-      <ListItem>
-        <NavLink to="/profile">
-          <ListIcon as={AtSignIcon} color={"white"} />
-          Profile
+          New Review
         </NavLink>
       </ListItem>
     </List>
