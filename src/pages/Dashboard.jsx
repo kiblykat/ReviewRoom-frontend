@@ -80,7 +80,7 @@ export default function Dashboard() {
                   <Text>
                     Reviewed Products: {customer.reviewedProducts.length}
                   </Text>
-                  <Text>Email: {customer.email}</Text>
+                  {/* <Text>Email: {customer.email}</Text> */}
                 </Box>
               </Flex>
             </CardHeader>
@@ -100,7 +100,7 @@ export default function Dashboard() {
                   leftIcon={<ViewIcon />}
                   onClick={() => reviewsLoader(customer.id)}
                 >
-                  View Reviews
+                  Reviews
                 </Button>
               </HStack>
             </CardFooter>
