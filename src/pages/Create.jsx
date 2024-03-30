@@ -34,10 +34,8 @@ export default function Create() {
 
       const data = response.data;
       console.log("Success:", data);
-      // Handle successful submission (optional)
     } catch (error) {
       console.error("Error:", error);
-      // Handle errors (optional)
     }
   };
 
