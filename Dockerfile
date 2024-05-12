@@ -41,12 +41,8 @@ RUN service postgresql start && \
 # The deployment work directory. 
 WORKDIR /opt/app
 
-# The environment port(s) to expose. The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime. 
-# Expose the PostgreSQL port. This is not actually accessible from outside the container when deployed on Render, but it is useful for linking containers together or directly connecting to the database from the host machine. 
-EXPOSE 5432
-
 # Expose the application port. This is the port that the application listens on for incoming requests. 
-ENV PORT=9090
+ENV PORT=4173
 EXPOSE $PORT
 
 # Copy the Jar file generated from the builder context into the Docker image. 
