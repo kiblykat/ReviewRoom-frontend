@@ -1,5 +1,6 @@
 # The base image to build. Define the context name for the build stage. 
-FROM eclipse-temurin:21-jdk-alpine as builder
+# FROM eclipse-temurin:21-jdk-alpine as builder
+FROM 20-alpine as builder
 
 # The build work directory. 
 WORKDIR /opt/app
