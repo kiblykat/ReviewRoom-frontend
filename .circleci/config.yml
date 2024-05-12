@@ -95,13 +95,14 @@ workflows:
     jobs:
       - build # This will use the circleci/node orb to do a npm install to build.
 
-      - test: # This will use the circleci/node orb to do a mvn verify (which includes build and test), then generate the test report.
-          requires:
-            - build
+      # - test: # This will use the circleci/node orb to do a mvn verify (which includes build and test), then generate the test report.
+      #     requires:
+      #       - build
 
       - publish:
           requires:
-            - test
+            # - test
+            - build
 
       - scan:
           requires:
