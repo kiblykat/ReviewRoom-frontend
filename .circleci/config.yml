@@ -23,6 +23,9 @@ jobs:
       - run: |
           echo "Installing dependencies..."
           npm install # Get the project dependencies. Goal that resolves all project dependencies, including plugins and reports and their dependencies.
+      - run: |
+          echo "Building..."
+          npm run build
 
   test:
     executor: nodejs
@@ -36,8 +39,12 @@ jobs:
       - run: |
           echo "Installing dependencies..."
           npm install # Get the project dependencies. Goal that resolves all project dependencies, including plugins and reports and their dependencies.
-
-      - run: npm run test # Build and run the tests.
+      - run: |
+          echo "Building..."
+          npm run build # Build.
+      - run: |
+          echo "Running tests..."
+          npm run test # Run the tests.
 
       # - store_test_results: # Upload the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
       #     path: target/surefire-reports # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
@@ -95,14 +102,13 @@ workflows:
     jobs:
       - build # This will use the circleci/node orb to do a npm install to build.
 
-      # - test: # This will use the circleci/node orb to do a mvn verify (which includes build and test), then generate the test report.
-      #     requires:
-      #       - build
+      - test: # This will use the circleci/node orb to do a mvn verify (which includes build and test), then generate the test report.
+          requires:
+            - build
 
       - publish:
           requires:
-            # - test
-            - build
+            - test
 
       - scan:
           requires:
