@@ -21,11 +21,10 @@ export default function Create() {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-
-    const API_URL = import.meta.env.VITE_API_URL || "https://localhost:9090/";
+    event.preventDefault(); // Prevent default form submission.
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "https://localhost:9090/";
       const response = await axios.post(
         `${API_URL}customers/${customerId}/products/${productId}/reviews`,
         formData,
