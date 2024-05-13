@@ -1,4 +1,4 @@
-// src/__ tests __/App.test.tsx
+// src/__ tests __/App.spec.js
 import { expect, test } from "vitest";
 
 test("sample_test", () => {
