@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   const customersLoader = async () => {
     try {
-      const res = await axios.get("http://localhost:9090/customers");
+      const res = await axios.get("${API_URL}customers");
       setCustomers(res.data);
       console.log(res.data);
     } catch (error) {
@@ -36,9 +36,7 @@ export default function Dashboard() {
 
   const reviewsLoader = async (customerId) => {
     try {
-      const res = await axios.get(
-        `http://localhost:9090/customers/${customerId}`
-      );
+      const res = await axios.get(`${API_URL}customers/${customerId}`);
       setReviews(res.data);
       console.log(res.data.reviews);
     } catch (error) {
@@ -48,9 +46,7 @@ export default function Dashboard() {
 
   const deleteCustomer = async (customerId) => {
     try {
-      const res = await axios.delete(
-        `http://localhost:9090/customers/${customerId}`
-      );
+      const res = await axios.delete(`${API_URL}customers/${customerId}`);
       window.location.reload();
     } catch (error) {
       console.log("error encountered: ", error);

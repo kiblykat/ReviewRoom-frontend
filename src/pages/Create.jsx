@@ -23,9 +23,11 @@ export default function Create() {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
 
+    const API_URL = import.meta.env.VITE_API_URL || "https://localhost:9090/";
+
     try {
       const response = await axios.post(
-        `http://localhost:9090/customers/${customerId}/products/${productId}/reviews`,
+        `${API_URL}customers/${customerId}/products/${productId}/reviews`,
         formData,
         {
           headers: { "Content-Type": "application/json" },
