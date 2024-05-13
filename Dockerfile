@@ -27,8 +27,8 @@ RUN npm install && npm run build
 FROM node:20-alpine
 
 # Setup a non-root user with user privileges instead of root privileges. 
-RUN adduser -D myuser
-RUN addgroup usergroup; adduser --ingroup usergroup --disabled-password myuser; 
+RUN adduser -D myuser || true
+RUN addgroup usergroup || true; adduser --ingroup usergroup --disabled-password myuser || true; 
 
 # As a security best practice, switch to a non-root user with user privileges instead of root privileges. 
 # The USER Dockerfile instruction sets the preferred user name (or UID) and optionally the user group (or GID) while running the image — and for any subsequent RUN, CMD, or ENTRYPOINT instructions. 
