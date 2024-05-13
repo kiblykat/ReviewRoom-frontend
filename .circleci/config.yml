@@ -1,0 +1,127 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.6.0
+  node: circleci/node@5.2.0
+  snyk: snyk/snyk@2.1.0
+
+executors: # Executors define the environment in which the steps of a job will be run, allowing you to reuse a single executor definition across multiple jobs.
+  nodejs:
+    docker: # Environment. Multiple Docker images are most useful when you need to connect to a resource over the network.
+      - image: cimg/node:20.13.1 # The primary base image.
+
+jobs:
+  build: # Job name.
+    executor: nodejs
+    # docker: # Environment.
+    #   - image: cimg/openjdk:21.0.2
+    #     environment:
+    #       PGHOST: 127.0.0.1
+
+    steps:
+      - checkout # Check out source code to the working directory.
+      - run: |
+          echo "Installing dependencies..."
+          npm install # Get the project dependencies. Goal that resolves all project dependencies, including plugins and reports and their dependencies.
+      - run: |
+          echo "Building..."
+          npm run build
+
+  test:
+    executor: nodejs
+    # docker: # Environment.
+    #   - image: cimg/openjdk:21.0.2
+    #     environment:
+    #       PGHOST: 127.0.0.1
+
+    steps:
+      - checkout # Check out source code to the working directory.
+      - run: |
+          echo "Installing dependencies..."
+          npm install # Get the project dependencies. Goal that resolves all project dependencies, including plugins and reports and their dependencies.
+      - run: |
+          echo "Building..."
+          npm run build # Build.
+      - run: |
+          echo "Running tests..."
+          npm run test # Run the tests.
+
+      # - store_test_results: # Upload the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+      #     path: target/surefire-reports # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+
+      # - store_artifacts: # Store the uber jar as an artifact.
+      #     path: target/the-review-room-frontend-0.0.1-SNAPSHOT.jar # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      #     # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples.
+
+  publish: # Also known as the build-and-push.
+    # executor: docker/docker # This executor is provided by the circleci/docker orb.
+    executor: nodejs
+
+    steps:
+      - checkout # Checkout the app source code.
+      - setup_remote_docker # When setup_remote_docker executes, any Docker commands you use will execute locally on the virtual machine used to spin up containers for your job.
+      - docker/check # Sanity check to make sure you can build a Docker image. Check that Docker username and password environment variables are set, then run docker login to ensure that you can push the built image.
+      - docker/build: # Build the image.
+          image: nhkhai/the-review-room-frontend # Name of the image to build.
+          tag: latest # Image tag, defaults to the value of $CIRCLE_SHA1. Consider setting this dynamically based on the tag using env vars or CircleCI parameters.
+      - docker/push: # Pushes the image to the specified account in the environment variables.
+          image: nhkhai/the-review-room-frontend # Name of the image to push.
+          tag: latest # Comma-separated list of image tag, defaults to the value of $CIRCLE_SHA1. Consider setting this dynamically based on the tag using env vars or CircleCI parameters.
+
+  scan:
+    docker:
+      - image: cimg/base:current # Define the execution environment in which the steps of a job will run. This is the base image.
+
+    environment: # The environment allows us to create an environment for the job and allows us to create custom environment variables.
+      IMAGE_NAME: nhkhai/the-review-room-frontend # The target container image to scan.
+
+    steps:
+      - checkout # Checkout the app source code.
+      - setup_remote_docker # When setup_remote_docker executes, any Docker commands you use will execute locally on the virtual machine used to spin up containers for your job.
+      - docker/check # Sanity check to make sure you can build a Docker image. Check that Docker username and password environment variables are set, then run docker login to ensure that you can push the built image.
+      - run: docker build -t $IMAGE_NAME . # $IMAGE_NAME gets the value from the environment we created above.
+      - snyk/scan: # This triggers the Snyk scan using the preconfigured SNYK_TOKEN environmental variable.
+          docker-image-name: $IMAGE_NAME # The image name, if scanning a container image.
+          fail-on-issues: false # This specifies if builds should be failed or continued based on issues found by Snyk. If false, the failure is hidden and marked as a pass.
+          severity-threshold: high # Only report vulnerabilities of provided level or higher (low/medium/high/critical). If param is not present, the default value is low.
+          monitor-on-build: false # If enabled, this takes a current application dependencies snapshot for continuous monitoring by Snyk, if test was successful.
+
+  deploy:
+    docker:
+      - image: cimg/base:current # Define the execution environment in which the steps of a job will run. This is the base image.
+
+    steps:
+      - run:
+          name: Render Deploy Hook
+          # Use the built-in curl client to sends a HTTP request to the Render hosting service via the URL environment variable. This triggers a pre-configured deployment flow to run.
+          command: |
+            curl "$RENDER_DEPLOY_HOOK_URL"
+
+workflows:
+  cicd_flow: # Workflow name. This is the name of the workflow, feel free to change it to better match your workflow.
+    jobs:
+      - build # This will use the circleci/node orb to do a npm install to build.
+
+      - test: # This will use the circleci/node orb to do a mvn verify (which includes build and test), then generate the test report.
+          requires:
+            - build
+
+      - publish:
+          requires:
+            - test
+
+      - scan:
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                - release
+
+      - deploy:
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                - release
