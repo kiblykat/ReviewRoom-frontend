@@ -27,7 +27,7 @@ export default function Dashboard() {
   const customersLoader = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || "https://localhost:9090/";
-      const res = await axios.get("${API_URL}customers");
+      const res = await axios.get(`${API_URL}customers`);
       setCustomers(res.data);
       console.log(res.data);
     } catch (error) {
