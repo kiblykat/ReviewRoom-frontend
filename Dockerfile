@@ -1,6 +1,12 @@
 # The base image to build. Define the context name for the build stage. 
 FROM node:20-alpine as builder
 
+# Define build arguments for environment variables. 
+ARG VITE_API_URL
+
+# Set environment variables during the build process. 
+ENV VITE_API_URL=$VITE_API_URL
+
 # The build work directory. 
 WORKDIR /opt/app
 
