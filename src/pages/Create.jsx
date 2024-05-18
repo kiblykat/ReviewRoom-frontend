@@ -25,6 +25,7 @@ export default function Create() {
 
     try {
       const API_URL = import.meta.env.VITE_API_URL || "https://localhost:9090/";
+      console.log("API_URL:", API_URL); // Check the value of API_URL.
       const response = await axios.post(
         `${API_URL}customers/${customerId}/products/${productId}/reviews`,
         formData,
