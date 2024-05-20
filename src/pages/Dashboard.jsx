@@ -59,9 +59,7 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    customersLoader();
-  }, []);
+  useEffect(() => customersLoader, []);
 
   return (
     <SimpleGrid spacing={10} minChildWidth="250px">
