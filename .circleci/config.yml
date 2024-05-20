@@ -64,7 +64,7 @@ jobs:
       - docker/build: # Build the image.
           image: nhkhai/the-review-room-frontend # Name of the image to build.
           tag: latest # Image tag, defaults to the value of $CIRCLE_SHA1. Consider setting this dynamically based on the tag using env vars or CircleCI parameters.
-          extra_build_args: --build-arg VITE_API_URL=$VITE_API_URL
+          extra_build_args: --build-arg VITE_API_URL=$VITE_API_URL # The build arguments to pass the environment variables as a variable to the Docker build command in the <varname>=<value> flag input format.
       - docker/push: # Pushes the image to the specified account in the environment variables.
           image: nhkhai/the-review-room-frontend # Name of the image to push.
           tag: latest # Comma-separated list of image tag, defaults to the value of $CIRCLE_SHA1. Consider setting this dynamically based on the tag using env vars or CircleCI parameters.

@@ -1,11 +1,12 @@
 # The base image to build. Define the context name for the build stage. 
 FROM node:20-alpine as builder
 
-# Define build arguments for environment variables. 
+# The ARG instruction defines a variable that users can pass at build-time to the builder with the docker build command using the --build-arg <varname>=<value> flag. This is transient and does not persist in the final image. 
 ARG VITE_API_URL
 
-# Set environment variables during the build process. 
-ENV VITE_API_URL=$VITE_API_URL
+# The ENV instruction sets the environment variable <key> to the value <value>. The environment variables set using ENV will persist when a container is run from the resulting image. 
+# Combine both by building an image with a specific ARG then using that ARG as an ENV. 
+ENV VITE_API_URL=${VITE_API_URL}
 
 # The build work directory. 
 WORKDIR /opt/app
@@ -20,6 +21,8 @@ COPY index.html package-lock.json package.json vite.config.js /opt/app/
 RUN npm install && npm run build
 
 # The base image to package. This is a multi-stage build using a new context. 
+# The ARG and ENV instructions are not available in the final image unless they are set again.
+# They are not needed in the final image in this case as the values are already set in the builder image and compiled into the application.
 FROM node:20-alpine
 
 # Setup a non-root user with user privileges instead of root privileges. 
