@@ -15,7 +15,7 @@ import mockAPI from "../api/smartInventoryApi";
 export default function Navbar() {
   return (
     <Flex as="nav" p="10px" alignItems="center" mb="40px">
-      <Heading as="h1">Smart Inventory</Heading>
+      <Heading as="h1">The Review Room</Heading>
       <Spacer />
     </Flex>
   );
