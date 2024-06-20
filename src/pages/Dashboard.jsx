@@ -13,8 +13,15 @@ import {
   Heading,
   Link,
   ListIcon,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -23,6 +30,7 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [customers, setCustomers] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const customersLoader = async () => {
     try {
@@ -41,8 +49,10 @@ export default function Dashboard() {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:9090/";
       console.log("API_URL:", API_URL); // Check the value of API_URL.
       const res = await axios.get(`${API_URL}customers/${customerId}`);
-      setReviews(res.data);
+      // setReviews(res.data);
+      setReviews(res.data.reviews);
       console.log(res.data.reviews);
+      onOpen();
     } catch (error) {
       console.log("error encountered: ", error);
     }
@@ -64,52 +74,81 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <SimpleGrid spacing={10} minChildWidth="250px">
-      {customers &&
-        customers.map((customer) => (
-          <Card
-            key={customer.id}
-            borderTop={"8px"}
-            borderColor={"purple.400"}
-            bg={"white"}
-          >
-            <CardHeader>
-              <Flex gap="5px">
-                <Avatar src="/img/ugandanKnuckles.png" />
-                <Box>
-                  <Heading as="h3" size="small">
-                    {customer.firstName} {customer.lastName}
-                  </Heading>
-                  <Text>{customer.country}</Text>
+    <>
+      <SimpleGrid spacing={10} minChildWidth="250px">
+        {customers &&
+          customers.map((customer) => (
+            <Card
+              key={customer.id}
+              borderTop={"8px"}
+              borderColor={"purple.400"}
+              bg={"white"}
+            >
+              <CardHeader>
+                <Flex gap="5px">
+                  <Avatar src="/img/ugandanKnuckles.png" />
+                  <Box>
+                    <Heading as="h3" size="small">
+                      {customer.firstName} {customer.lastName}
+                    </Heading>
+                    <Text>{customer.country}</Text>
+                    <Text>
+                      Reviewed Products: {customer.reviewedProducts.length}
+                    </Text>
+                    {/* <Text>Email: {customer.email}</Text> */}
+                  </Box>
+                </Flex>
+              </CardHeader>
+              <CardBody>{customer.description}</CardBody>
+              <Divider borderColor="gray.200" />
+              <CardFooter>
+                <HStack>
+                  <Button
+                    variant="ghost"
+                    leftIcon={<EditIcon />}
+                    onClick={() => deleteCustomer(customer.id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    leftIcon={<ViewIcon />}
+                    onClick={() => reviewsLoader(customer.id)}
+                  >
+                    Reviews
+                  </Button>
+                </HStack>
+              </CardFooter>
+            </Card>
+          ))}
+      </SimpleGrid>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Customer Reviews</ModalHeader>
+          <ModalBody>
+            {reviews.length ? (
+              reviews.map((review, index) => (
+                <Box key={index} mb="4">
                   <Text>
-                    Reviewed Products: {customer.reviewedProducts.length}
+                    <b>Review:</b> {review.reviewContent}
                   </Text>
-                  {/* <Text>Email: {customer.email}</Text> */}
+                  <Text>
+                    <b>Rating:</b> {review.rating}
+                  </Text>
                 </Box>
-              </Flex>
-            </CardHeader>
-            <CardBody>{customer.description}</CardBody>
-            <Divider borderColor="gray.200" />
-            <CardFooter>
-              <HStack>
-                <Button
-                  variant="ghost"
-                  leftIcon={<EditIcon />}
-                  onClick={() => deleteCustomer(customer.id)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  variant="ghost"
-                  leftIcon={<ViewIcon />}
-                  onClick={() => reviewsLoader(customer.id)}
-                >
-                  Reviews
-                </Button>
-              </HStack>
-            </CardFooter>
-          </Card>
-        ))}
-    </SimpleGrid>
+              ))
+            ) : (
+              <Text>No reviews available.</Text>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
