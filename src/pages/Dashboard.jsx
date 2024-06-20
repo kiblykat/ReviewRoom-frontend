@@ -131,6 +131,18 @@ export default function Dashboard() {
               reviews.map((review, index) => (
                 <Box key={index} mb="4">
                   <Text>
+                    <b>Product ID:</b> {review.product.id}
+                  </Text>
+                  <Text>
+                    <b>Product Category:</b> {review.product.category}
+                  </Text>
+                  <Text>
+                    <b>Product:</b> {review.product.name}
+                  </Text>
+                  <Text>
+                    <b>Price ($):</b> {review.product.price}
+                  </Text>
+                  <Text>
                     <b>Review:</b> {review.reviewContent}
                   </Text>
                   <Text>
