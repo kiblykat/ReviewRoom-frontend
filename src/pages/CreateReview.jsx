@@ -43,8 +43,10 @@ export default function CreateReview() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Heading size="md">Add review to existing customer</Heading>
-      <label htmlFor="customerId">customerId:</label>
+      <Heading size="md">
+        Add a review to an existing customer and product:{" "}
+      </Heading>
+      <label htmlFor="customerId">Customer Id:</label>
       <input
         style={{ margin: "5px", padding: "3px" }}
         type="number"
@@ -53,7 +55,7 @@ export default function CreateReview() {
         onChange={handleInputChange}
       />
       <br />
-      <label htmlFor="productId">productId:</label>
+      <label htmlFor="productId">Product Id:</label>
       <input
         style={{ margin: "5px", padding: "3px" }}
         type="number"
@@ -71,7 +73,7 @@ export default function CreateReview() {
         onChange={handleInputChange}
       />
       <br />
-      <label htmlFor="reviewContent">reviewContent:</label>
+      <label htmlFor="reviewContent">Review Content:</label>
       <input
         style={{ margin: "5px", padding: "3px" }}
         type="text"
