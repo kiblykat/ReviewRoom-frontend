@@ -18,6 +18,18 @@ export default function Sidebar() {
           New Review
         </NavLink>
       </ListItem>
+      <ListItem>
+        <NavLink to="/create-customer">
+          <ListIcon as={AddIcon} color={"white"} />
+          New Customer
+        </NavLink>
+      </ListItem>
+      <ListItem>
+        <NavLink to="/create-product">
+          <ListIcon as={AddIcon} color={"white"} />
+          New Product
+        </NavLink>
+      </ListItem>
     </List>
   );
 }
