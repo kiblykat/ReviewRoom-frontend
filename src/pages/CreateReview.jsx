@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Heading } from "@chakra-ui/react";
 
-export default function Create() {
+export default function CreateReview() {
   const [formData, setFormData] = useState({});
   const [customerId, setCustomerId] = useState(0);
   const [productId, setProductId] = useState(0);

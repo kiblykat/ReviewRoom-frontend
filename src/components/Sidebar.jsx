@@ -13,7 +13,7 @@ export default function Sidebar() {
         </NavLink>
       </ListItem>
       <ListItem>
-        <NavLink to="/create">
+        <NavLink to="/create-review">
           <ListIcon as={EditIcon} color={"white"} />
           New Review
         </NavLink>
