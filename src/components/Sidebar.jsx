@@ -1,4 +1,4 @@
-import { AtSignIcon, CalendarIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, AtSignIcon, CalendarIcon, EditIcon } from "@chakra-ui/icons";
 import { List, ListIcon, ListItem } from "@chakra-ui/react";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -14,7 +14,7 @@ export default function Sidebar() {
       </ListItem>
       <ListItem>
         <NavLink to="/create-review">
-          <ListIcon as={EditIcon} color={"white"} />
+          <ListIcon as={AddIcon} color={"white"} />
           New Review
         </NavLink>
       </ListItem>
